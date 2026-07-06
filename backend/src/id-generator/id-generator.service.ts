@@ -8,7 +8,29 @@ export class IdGeneratorService {
   ) {}
 
   async generateId(prefix: string): Promise<string> {
-    // We'll implement this in the next step
-    return `${prefix}000001`;
+    const db = this.firebaseService.getFirestore();
+
+    const counterRef = db.collection('system').doc(`${prefix}_COUNTER`);
+
+    const nextNumber = await db.runTransaction(async (transaction) => {
+      const snapshot = await transaction.get(counterRef);
+
+      let currentNumber = 0;
+
+      if (snapshot.exists) {
+        currentNumber = snapshot.data()?.currentNumber ?? 0;
+      }
+
+      const newNumber = currentNumber + 1;
+
+      transaction.set(counterRef, {
+        currentNumber: newNumber,
+        updatedAt: new Date(),
+      });
+
+      return newNumber;
+    });
+
+    return `${prefix}${nextNumber.toString().padStart(6, '0')}`;
   }
 }
