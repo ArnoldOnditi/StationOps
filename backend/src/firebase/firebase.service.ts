@@ -10,7 +10,7 @@ import serviceAccount from '../../firebase/service-account.json';
 export class FirebaseService {
   private readonly auth: Auth;
   private readonly firestore: Firestore;
-
+  
   constructor() {
     if (getApps().length === 0) {
       initializeApp({
@@ -27,9 +27,10 @@ export class FirebaseService {
     console.log('✅ Firestore ready');
   }
 
-  getAuth(): Auth {
-    return this.auth;
-  }
+  getAuth() {
+  return this.auth;
+}
+
 
   getFirestore(): Firestore {
     return this.firestore;

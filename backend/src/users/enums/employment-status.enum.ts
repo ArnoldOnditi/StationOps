@@ -1,0 +1,7 @@
+export enum EmploymentStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  SUSPENDED = 'SUSPENDED',
+  TERMINATED = 'TERMINATED',
+  ON_LEAVE = 'ON_LEAVE',
+}
