@@ -22,7 +22,21 @@ export class UsersRepository {
         updatedAt: FieldValue.serverTimestamp(),
       });
   }
+  async findByEmployeeNumber(employeeNumber: string) {
+  const db = this.firebaseService.getFirestore();
 
+  const snapshot = await db
+    .collection('users')
+    .where('employeeNumber', '==', employeeNumber)
+    .limit(1)
+    .get();
+
+  if (snapshot.empty) {
+    return null;
+  }
+
+  return snapshot.docs[0].data();
+}
   async findById(userId: string) {
     const db = this.firebaseService.getFirestore();
 
@@ -82,7 +96,24 @@ if (query.employmentStatus) {
       query.employmentStatus,
   );
 }
+// Sorting
+if (query.sortBy) {
+  const sortBy = query.sortBy;
+  const order = query.order === 'desc' ? -1 : 1;
 
+  users.sort((a: any, b: any) => {
+    const valueA = a[sortBy];
+    const valueB = b[sortBy];
+
+    if (valueA == null) return 1;
+    if (valueB == null) return -1;
+
+    if (valueA > valueB) return order;
+    if (valueA < valueB) return -order;
+
+    return 0;
+  });
+}
 //Pagination 
   const page = Number(query.page) || 1;
 const limit = Number(query.limit) || 10;
@@ -148,5 +179,29 @@ return {
   }
 
   return snapshot.docs[0].data();
+}
+  async findByEmployeeNumberExcludingUser(
+  employeeNumber: string,
+  userId: string,
+) {
+  const db = this.firebaseService.getFirestore();
+
+  const snapshot = await db
+    .collection('users')
+    .where('employeeNumber', '==', employeeNumber)
+    .limit(1)
+    .get();
+
+  if (snapshot.empty) {
+    return null;
+  }
+
+  const user = snapshot.docs[0].data();
+
+  if (user.userId === userId) {
+    return null;
+  }
+
+  return user;
 }
 }
