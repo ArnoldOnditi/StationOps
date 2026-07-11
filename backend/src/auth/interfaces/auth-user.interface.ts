@@ -11,3 +11,12 @@ export interface AuthUser {
 
   email: string;
 }
+export interface AuthenticatedUser {
+  userId: string;
+  firebaseUid: string;
+  employeeNumber: string;
+  fullName: string;
+  email: string;
+  roleId: string;
+  stationId: string;
+}
