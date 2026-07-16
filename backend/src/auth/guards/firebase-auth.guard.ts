@@ -15,41 +15,39 @@ export class FirebaseAuthGuard implements CanActivate {
     private readonly usersRepository: UsersRepository,
   ) {}
 
-  async canActivate(
-    context: ExecutionContext,
-  ): Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
+ async canActivate(
+  context: ExecutionContext,
+): Promise<boolean> {
+  const request = context.switchToHttp().getRequest();
 
-    const authHeader = request.headers.authorization;
+  const authHeader = request.headers.authorization;
 
-    if (!authHeader) {
-      throw new UnauthorizedException(
-        'Authorization header missing.',
-      );
-    }
-
-    const token = authHeader.replace('Bearer ', '');
-
-    const decodedToken =
-      await this.firebaseService
-        .getAuth()
-        .verifyIdToken(token);
-    request.user = decodedToken;
-    return true;
-
-    const user =
-      await this.usersRepository.findByFirebaseUid(
-        decodedToken.uid,
-      );
-
-    if (!user) {
-      throw new UnauthorizedException(
-        'Employee profile not found.',
-      );
-    }
-
-    request.user = user;
-
-    return true;
+  if (!authHeader) {
+    throw new UnauthorizedException(
+      'Authorization header missing.',
+    );
   }
+
+  const token = authHeader.replace('Bearer ', '');
+
+  const decodedToken =
+    await this.firebaseService
+      .getAuth()
+      .verifyIdToken(token);
+
+  const user =
+    await this.usersRepository.findByFirebaseUid(
+      decodedToken.uid,
+    );
+
+  if (!user) {
+    throw new UnauthorizedException(
+      'Employee profile not found.',
+    );
+  }
+
+  request.user = user;
+
+  return true;
+}
 }
