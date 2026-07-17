@@ -6,6 +6,8 @@ export enum AuditModule {
 
   STATIONS = 'Stations',
 
+  PRODUCTS = 'PRODUCTS',
+
   SHIFTS = 'Shifts',
 
   SALES = 'Sales',

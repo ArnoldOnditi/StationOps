@@ -37,4 +37,12 @@ export enum Permission {
   // System
   // =========================
   SYSTEM_ADMIN = 'SYSTEM_ADMIN',
+
+  // =========================
+// Products
+// =========================
+PRODUCT_CREATE = 'PRODUCT_CREATE',
+PRODUCT_VIEW = 'PRODUCT_VIEW',
+PRODUCT_UPDATE = 'PRODUCT_UPDATE',
+PRODUCT_DEACTIVATE = 'PRODUCT_DEACTIVATE',
 }
